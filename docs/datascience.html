@@ -1,0 +1,133 @@
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Science Groups Cluster Map </title>
+
+    <link href="https://r-community.github.io/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+   <link rel="stylesheet" href="https://r-community.github.io/resources/leaflet-1.5.1/leaflet.css"/>
+<link rel="stylesheet" href="https://r-community.github.io/resources/leaflet-awesome-markers/dist/leaflet.awesome-markers.css">
+<link rel="stylesheet" href="https://r-community.github.io/resources/leaflet.markercluster/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="https://r-community.github.io/resources/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+<link href="https://r-community.github.io/resources/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://r-community.github.io/resources/css/custom.min.css" rel="stylesheet">
+
+    <script src="https://r-community.github.io/resources/js/jquery.min.js"></script> 
+   <script src="https://r-community.github.io/resources/leaflet-1.5.1/leaflet.js"></script>
+    <script src="https://r-community.github.io/resources/leaflet-awesome-markers/dist/leaflet.awesome-markers.js"></script>
+<script src="https://r-community.github.io/resources/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+  <style>
+    #map{ height: 91%; width:100%;}
+  </style>
+</head>
+<body style="background:#ffffff;" >
+ <!-- top navigation -->
+        <div class="top_nav" style="width:101%; margin:-10px 0px 0px -10px;" >
+          <div class="nav_menu" style="background:#1da1f2; margin:0px 0px -1px 0px;" ">
+            <nav>
+              <div class="nav toggle" style="width:400px">
+                 <div class="title" style="font-size:25px; font-family: Calibri, Helvetica, Arial, sans-serif; margin:-5px 0 0 30px; color:white"> <i class="fa fa-users" style="color:white; margin:0 5px 0 0"></i> Data Science Community </div>             
+ </div>
+
+              <ul class="nav navbar-nav navbar-right">
+
+                <li class="" style="color:white">
+                  <a href="#" target="_blank" class="user-profile dropdown-toggle" aria-expanded="false">
+                    <i class="fa fa-calendar" style="color:white"></i> <span style="color:white"> Events </span>
+                                      </a>
+                                  </li>                                                                            </ul>
+                            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+  <div id="map"></div>
+
+	<script type="text/javascript">// initialize the map
+  var map = L.map('map', { maxZoom: 7}).setView([10, 10],2);
+  // load a tile layer
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      maxZoom: 18,
+      minZoom: 1
+    }).addTo(map);
+
+setTimeout(function () { map.invalidateSize() }, 1200);
+
+  // load GeoJSON from an external file
+  $.getJSON("data/ds_map_data.geojson",function(data){
+	//console.log(data.features[0])
+
+L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
+     var blueMarker = L.AwesomeMarkers.icon({
+icon: 'check-circle',
+    markerColor: 'blue'
+  });
+
+var darkblueMarker = L.AwesomeMarkers.icon({
+icon: 'user-times',
+markerColor: 'darkblue'
+  });
+
+var orangeMarker = L.AwesomeMarkers.icon({
+icon: 'user-times',
+    markerColor: 'orange'
+  });
+	
+     var markers = L.markerClusterGroup({
+maxClusterRadius: function (zoom) {
+        return (zoom <= 10) ? 70 : 1; // radius in pixels
+    }
+});
+		
+		for (var i = 0; i < data.features.length; i++) {
+			var a = data.features[i].geometry.coordinates;
+past_events = data.features[i].properties.past_events;
+if ( past_events >= 0 & data.features[i].properties.days_since_last_event <= 180 | data.features[i].properties.upcoming_events > 0) {
+
+			var marker = L.marker(new L.LatLng(a[1], a[0]), {icon: blueMarker});
+			marker.bindPopup("<b>" + data.features[i].properties.url + '</b>' + '<br/>' + 'Created: '+ data.features[i].properties.created + '<br/>' +
+ 'Members: ' + data.features[i].properties.members  + '<br/>' + 'Past Events: '+ data.features[i].properties.past_events
+  + '<br/>' + 'Upcoming Events: '+ data.features[i].properties.upcoming_events + '<br/>' + 'Last Event Date: '+ data.features[i].properties.last_event+ '<br/>' + 'Active');
+			markers.addLayer(marker);
+		}
+
+if (data.features[i].properties.days_since_last_event > 180 & past_events != 0 & data.features[i].properties.upcoming_events == 0 ){
+
+var marker = L.marker(new L.LatLng(a[1], a[0]), {icon: darkblueMarker});
+
+
+marker.bindPopup("<b>" + data.features[i].properties.url + '</b>' + '<br/>' + 'Created: '+ data.features[i].properties.created + '<br/>' +
+ 'Members: ' + data.features[i].properties.members  + '<br/>' + 'Past Events: '+ data.features[i].properties.past_events
+  + '<br/>' + 'Upcoming Events: '+ data.features[i].properties.upcoming_events + '<br/>' + 'Last Event Date: '+ data.features[i].properties.last_event + '<br/>' + 'Months Inactive: '+ Math.round(data.features[i].properties.days_since_last_event/30) + ' months' + '<br/>' + 'Inactive');
+
+			markers.addLayer(marker);
+
+}
+
+if ( past_events == 0 & data.features[i].properties.upcoming_events == 0) {
+var marker = L.marker(new L.LatLng(a[1], a[0]), {icon: orangeMarker});
+
+marker.bindPopup("<b>" + data.features[i].properties.url + '</b>' + '<br/>' + 'Created: '+ data.features[i].properties.created + '<br/>' +
+ 'Members: ' + data.features[i].properties.members  + '<br/>' + 'Past Events: '+ data.features[i].properties.past_events
+  + '<br/>' + 'Upcoming Events: '+ data.features[i].properties.upcoming_events + '<br/>' + 'Months Inactive: '+ Math.round((new Date() - new Date(data.features[i].properties.created) ) /(30*60*60*24*1000)) + ' months' + '<br/>' + 'Unbegun');
+
+			markers.addLayer(marker);
+
+
+}
+
+}
+
+		map.addLayer(markers);
+ });
+  
+  </script>
+</body>
+</html>
+	
