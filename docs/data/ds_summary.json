@@ -1,0 +1,32 @@
+[
+  [
+    {
+      "chapters": 7779,
+      "countries": 116,
+      "city": 1083,
+      "members": 5664144,
+      "past_events": 131242,
+      "upcoming_events": 4016,
+      "avgchapter": 67,
+      "avgevent": 16,
+      "avgmember": 728,
+      "last_update": "Mon Sep 16 12:13:40 2019"
+    }
+  ],
+  [
+    {
+      "latinAm": 3276,
+      "us_can": 3063,
+      "eur": 2615,
+      "afr": 154,
+      "asia": 1188,
+      "aus": 304,
+      "latinAm_m": 2443817,
+      "us_can_m": 2373939,
+      "eur_m": 1616156,
+      "afr_m": 106004,
+      "asia_m": 1109393,
+      "aus_m": 178222
+    }
+  ]
+]
