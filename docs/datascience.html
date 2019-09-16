@@ -21,8 +21,8 @@
     <script src="https://r-community.github.io/resources/leaflet-awesome-markers/dist/leaflet.awesome-markers.js"></script>
 <script src="https://r-community.github.io/resources/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
-  <style>
-    #map{ height: 91%; width:100%;}
+ <style>
+    #map{ height: 80%; width:100%; margin:0px 0px 0px 20px;}
   </style>
 </head>
 <body style="background:#ffffff;" >
@@ -37,7 +37,7 @@
               <ul class="nav navbar-nav navbar-right">
 
                 <li class="" style="color:white">
-                  <a href="https://datascience-community.github.io/event-explorer/calendar.html"  class="user-profile dropdown-toggle" aria-expanded="false">
+                  <a href="#" target="_blank" class="user-profile dropdown-toggle" aria-expanded="false">
                     <i class="fa fa-calendar" style="color:white"></i> <span style="color:white"> Events </span>
                                       </a>
                                   </li>                                                                            </ul>
@@ -45,7 +45,90 @@
           </div>
         </div>
         <!-- /top navigation -->
-  <div id="map"></div>
+
+<script>
+ $(document).ready(function() {
+d3.json("data/ds_summary.json").then(function(data) {
+//console.log(data[0][0].chapters);
+
+document.getElementById('chapters').innerHTML = data[0][0].chapters; 
+document.getElementById('members').innerHTML = data[0][0].members;
+document.getElementById('countries').innerHTML = data[0][0].countries;
+document.getElementById('city').innerHTML = data[0][0].city;
+
+			      $('.count').each(function () {
+        $(this).prop('Counter',0).animate({
+            Counter: $(this).text()
+        }, {
+            duration: 3000,
+            easing: 'swing',
+            step: function (now) {
+                $(this).text(Math.ceil(now));
+            }
+        });
+     });
+
+});
+});
+ 
+</script>
+
+<div class="row">
+              <div class="col-md-12">
+                
+                  <div class="x_content">
+                    <div class="row">
+                      <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="tile-stats" style="background-color:#1da1f2; ">
+                          <div class="icon" style="color:white; padding:15px 0px 0px 0px;"><i class="fa fa-users"></i>
+                          </div>
+                          <div id="chapters" class="count" style="color:white"></div>
+<p style="color:white"></p>
+                      <h3 style="color:#eeeeee">Data Science User Groups</h3>
+                          <br/>
+                        </div>
+                      </div>
+                      <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="tile-stats" style="background-color:white">
+
+                          <div class="icon" style="color:#1da1f2;padding:15px 0px 0px 0px;"><i class="fa fa-user"></i>
+                          </div>
+                          <div id="members" class="count" style="color:#435f9c"></div>
+
+                          <h3>Members</h3>
+                          <p></p><br/>
+
+                        </div>
+                      </div>
+                      
+<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="tile-stats" style="background-color:#1da1f2">
+                          <div class="icon" style="color:#ffffff;padding:15px 0px 0px 0px;"><i class="fa fa-globe"></i>
+                          </div>
+                          <div id="countries" class="count" style="color:white"></div>
+                          <h3 style="color:#eeeeee">Countries</h3>
+                          <p style="color:white"></p><br/>
+
+                        </div>
+                      </div>
+
+<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="tile-stats" >
+                          <div class="icon" style="color:#1da1f2;padding:15px 0px 0px 0px;margin:0px 0px 0px 0px;"><i class="fa fa-map-marker"></i>
+                          </div>
+                          <div id="city" class="count" style="color:#435f9c"></div>
+
+                          <h3>Cities</h3>
+                          <p></p><br/>
+
+                        </div>
+                      </div>
+
+                             </div></div></div>
+
+
+
+  <div id="map" ></div>
 
 	<script type="text/javascript">// initialize the map
   var map = L.map('map', { maxZoom: 7}).setView([10, 10],2);
@@ -128,6 +211,9 @@ marker.bindPopup("<b>" + data.features[i].properties.url + '</b>' + '<br/>' + 'C
  });
   
   </script>
+
+<script src="https://r-community.github.io/resources/js/d3/d3.min.js"></script>
+
 </body>
 </html>
 	
